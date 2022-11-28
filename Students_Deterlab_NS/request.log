@@ -1,0 +1,31 @@
+BEGIN
+TRANSFERS
+jelena 12345 2021-11-27 06:30:34
+john 6587 2021-11-27 06:30:34
+kate 98512 2021-11-27 06:30:34
+shannon 4595 2021-11-27 06:31:55
+hawking -2020 2021-11-27 06:32:06
+feynman 20 2021-11-27 06:37:38
+marie-curie 3030 2021-11-27 06:52:16
+fermi -20202 2021-11-27 06:53:52
+USERS
+jelena $2y$10$XN0RnA4znn0nyfKJfaPOKeTJmSvmkqb5FkoW5jF3U099FOdnXA/PW
+john $2y$10$8jm24IyVGS.Jq82QntvO.ezHheMg/345m.Ki1RcAt4Sww7SuoLwRu
+kate $2y$10$6AM9o2lEefJTPLCIWZWQy.uJLSNyN7CNuDFrX2YHzL/qG5kgsmYr6
+giorgio 123456
+END
+
+
+----
+
+
+BEGIN
+TRANSERS
+username amount timestamp
+username amount timestamp
+...
+USERS
+username password
+username password
+...
+END

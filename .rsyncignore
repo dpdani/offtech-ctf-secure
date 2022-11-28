@@ -1,0 +1,7 @@
+venv/
+report/
+.idea/
+.git/
+*.pyc
+deter_username.txt
+**/__pycache__/

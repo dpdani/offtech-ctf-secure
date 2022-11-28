@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "CTF Secure Server"
+version = "0.0.0"
+description = ""
+authors = ["Group 3"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+redder = "red.__main__:cli"
+
+[tool.poetry.dependencies]
+python = ">=3.6.1"
+typer = "^0.7.0"
+pydantic = "1.9.2"
+netifaces = "^0.11.0"
+loguru = "^0.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
