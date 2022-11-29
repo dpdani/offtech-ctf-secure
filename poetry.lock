@@ -49,6 +49,49 @@ optional = false
 python-versions = ">=3.6, <3.7"
 
 [[package]]
+name = "h2"
+version = "2.6.2"
+description = "HTTP/2 State-Machine based protocol implementation"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+hpack = ">=2.2,<4"
+hyperframe = ">=3.1,<4.0.0 || >4.0.0,<6"
+
+[[package]]
+name = "hpack"
+version = "3.0.0"
+description = "Pure-Python HPACK header compression"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "hyper"
+version = "0.7.0"
+description = "HTTP/2 Client for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+h2 = ">=2.4,<3.0"
+hyperframe = ">=3.2,<4.0"
+
+[package.extras]
+fast = ["pycohttpparser"]
+
+[[package]]
+name = "hyperframe"
+version = "3.2.0"
+description = "HTTP/2 framing layer for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "immutables"
 version = "0.19"
 description = "Immutable Collections"
@@ -170,7 +213,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6.1"
-content-hash = "23dc4719f443bc8b7c0a88c482d74f6bc0567b74a6e20719605592f2217e96d6"
+content-hash = "625e7282fcbc9ab2191f18a7a10bcae591f333176589ee9cec1eb31d851ca9aa"
 
 [metadata.files]
 aiocontextvars = [
@@ -191,6 +234,22 @@ contextvars = [
 dataclasses = [
     {file = "dataclasses-0.8-py3-none-any.whl", hash = "sha256:0201d89fa866f68c8ebd9d08ee6ff50c0b255f8ec63a71c16fda7af82bb887bf"},
     {file = "dataclasses-0.8.tar.gz", hash = "sha256:8479067f342acf957dc82ec415d355ab5edb7e7646b90dc6e2fd1d96ad084c97"},
+]
+h2 = [
+    {file = "h2-2.6.2-py2.py3-none-any.whl", hash = "sha256:93cbd1013a2218539af05cdf9fc37b786655b93bbc94f5296b7dabd1c5cadf41"},
+    {file = "h2-2.6.2.tar.gz", hash = "sha256:af35878673c83a44afbc12b13ac91a489da2819b5dc1e11768f3c2406f740fe9"},
+]
+hpack = [
+    {file = "hpack-3.0.0-py2.py3-none-any.whl", hash = "sha256:0edd79eda27a53ba5be2dfabf3b15780928a0dff6eb0c60a3d6767720e970c89"},
+    {file = "hpack-3.0.0.tar.gz", hash = "sha256:8eec9c1f4bfae3408a3f30500261f7e6a65912dc138526ea054f9ad98892e9d2"},
+]
+hyper = [
+    {file = "hyper-0.7.0-py2.py3-none-any.whl", hash = "sha256:069514f54231fb7b5df2fb910a114663a83306d5296f588fffcb0a9be19407fc"},
+    {file = "hyper-0.7.0.tar.gz", hash = "sha256:12c82eacd122a659673484c1ea0d34576430afbe5aa6b8f63fe37fcb06a2458c"},
+]
+hyperframe = [
+    {file = "hyperframe-3.2.0-py2.py3-none-any.whl", hash = "sha256:4dcab11967482d400853b396d042038e4c492a15a5d2f57259e2b5f89a32f755"},
+    {file = "hyperframe-3.2.0.tar.gz", hash = "sha256:05f0e063e117c16fcdd13c12c93a4424a2c40668abfac3bb419a10f57698204e"},
 ]
 immutables = [
     {file = "immutables-0.19-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:fef6743f8c3098ae46d9a2a3606b04a91c62e216487d91e90ce5c7419da3f803"},

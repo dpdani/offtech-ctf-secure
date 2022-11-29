@@ -1,0 +1,174 @@
+apache2: memory corruption in http2 push diary implementation
+
+apache2: memory corruption in http2 push diary implementation
+
+Short Description:
+mod_http2 in Apache 2.4.43 supports persistent push diaries passed over the 
+\u2018Cache-Digest' header. Sending a request with \u2018Cache-Digest: EA8=' results in a negative 
+value in diary->N. Pushing a new http2 stream while this diary is active triggers a call 
+to memmove() with a length argument of -8. 
+
+
+Technical Details:
+Apache's mod_http2 module supports a feature called push diary that keeps track of all 
+resources already pushed over a single HTTP/2 connection. To avoid unnecessary pushes on 
+new connections, clients can initialize or replace the active push diary by sending a 
+base64-encoded diary in the \u2018Cache-Digest' header (this feature is based on an abandoned 
+IETF draft described in https://datatracker.ietf.org/doc/draft-ietf-httpbis-cache-digest/).
+
+Unfortunately, the current stable release (2.4.43) incorrectly parses diary digests which 
+can trigger a memory corruption through a wild memmove call:
+
+712  static apr_int32_t h2_log2inv(unsigned char log2)
+713  {
+714      return log2? (1 << log2) : 1;
+715  }
+
+970  apr_status_t h2_push_diary_digest_set(h2_push_diary *diary, const char 
+*authority, 
+971                                        const char *data, apr_size_t len)
+972  {
+...
+974      unsigned char log2n, log2p;
+975      int N, i;
+...
+984      log2n = data[0];
+985      log2p = data[1];
+...
+993      apr_array_clear(diary->entries);
+...
+1001      N = h2_log2inv(log2n + log2p);    ***  A ***
+...
+1012      diary->N = N; *** B ***
+1013      /* Determine effective N we use for storage */
+1014      if (!N) {
+...
+1020      }
+1021      else if (N > diary->NMax) { *** C ***
+1025      }
+1026      
+...
+1034      for (i = 0; i < diary->N; ++i) { *** D ***
+...
+1040      }
+1041      
+...
+1046      return status;
+1047  }
+
+
+h2_push_diary_digest_set gets called for push-enabled http2 requests with a 
+\u2018Cache-Digest' header. data is pointing to the attacker controlled base64 decoded header 
+value. The first two bytes of the value are added and used as an argument for the 
+h2_log2inv function (A).  By setting these bytes to values that add up to 31 (for example 
+0x10, 0x0F), h2_log2inv will return a _negative_ int value (1 << 31) which will be stored 
+in the diary->N (B). As both N and diary->N are signed, we can pass the check in (C), 
+skip the loop in (D), leave the dict empty and immediately return. 
+
+In itself this is not a security issue, but it becomes a problem once a push happens and 
+h2_push_diary_append tries to add a new url to the diary. diary->entries->nelts will be 0 
+because the array got reset in h2_push_diary_digest_set. The if condition at (E) still 
+fails due to the negative value in diary->N and move_to_last is called (F). The 
+subtraction in  (G) triggers an integer underflow with lastidx becoming (size_t) -1. 
+This results in a  memmove call with a length parameter of (size_t)-8 (H).
+
+
+620  static h2_push_diary_entry *move_to_last(h2_push_diary *diary, apr_size_t idx)
+621  {
+622      h2_push_diary_entry *entries = (h2_push_diary_entry*)diary->entries->elts;
+623      h2_push_diary_entry e;
+624      apr_size_t lastidx = diary->entries->nelts-1; *** G ***
+625      
+626      /* move entry[idx] to the end */
+627      if (idx < lastidx) {
+628          e =  entries[idx];
+629          memmove(entries+idx, entries+idx+1, sizeof(e) * (lastidx - idx)); *** H 
+***
+630          entries[lastidx] = e;
+631      }
+632      return &entries[lastidx];
+633  }
+634  
+635  static void h2_push_diary_append(h2_push_diary *diary, h2_push_diary_entry *e)
+...      
+639      if (diary->entries->nelts < diary->N) { *** E ***
+\u2026
+644      else {
+645          /* replace content with new digest. keeps memory usage constant once 
+diary is full 
+646          ne = move_to_last(diary, 0); *** F ***
+647          *ne = *e;
+648      }
+...
+652  }
+
+Impact:
+The wild memmove() call will normally result in a crash once it reaches an invalid memory 
+range. However, I don't want to fully rule out exploitation of this bug for code exec as 
+it might be possible to corrupt a thread running in parallel. Chris Evan demonstrated 
+such an exploit for a very similar bug in Flash a couple of years ago: 
+https://googleprojectzero.blogspot.com/2015/03/taming-wild-copy-parallel-thread.html
+
+Requirements:
+Support for HTTP2 pushes is enabled automatically when mod_http2 is used, but triggering 
+the memmove call requires the server to actually push a stream to the client. As most 
+websites do not use server pushes, they are not immediately affected. However, Apache will 
+automatically push a URL when a HTTP2 response contains a \u2018Link Header' with the preload 
+relation (see https://httpd.apache.org/docs/trunk/howto/http2.html#page-header). So even 
+a limited HTTP header injection vulnerability can make a website vulnerable to this bug. 
+As one data point, I played around with this for a bit and quickly found an issue that 
+allows me to create Link headers on any Wordpress which will get parsed as using a 
+preload relation by Apache. 
+
+
+Dev Branch:
+
+The trunk branch has an additional off-by-one bug in the move_to_last function that never 
+got merged into stable: 
+
+static h2_push_diary_entry *move_to_last(h2_push_diary *diary, apr_size_t idx)
+622  {
+623      h2_push_diary_entry *entries = (h2_push_diary_entry*)diary->entries->elts;
+624      h2_push_diary_entry e;
+625      apr_size_t lastidx = (apr_size_t)diary->entries->nelts;
+626      
+627      /* move entry[idx] to the end */
+628      if (idx+1 < lastidx) {
+629          e =  entries[idx];
+630          memmove(entries+idx, entries+idx+1, sizeof(e) * (lastidx - idx));
+631          entries[lastidx] = e;
+632      }
+633      return &entries[lastidx];
+634  }
+
+As lastidx is equal to elements in the array, entries[lastidx] will point out-of-bounds. 
+(The stable branch correctly uses nelts - 1). I don't think this bug ever ended up in a 
+release so it probably does not warrant a separate report, but please let me know if you 
+disagree. FWIW this issue is probably significantly easier to exploit in practice. 
+
+Proof-of-Concept:
+
+The attached POC triggers a crash when pointed at a HTTP2 enabled Apache server that 
+sends a server push when responding to a request to /. An easy way to trigger this is to 
+add something like the following to the enabled config: 
+<Location />
+    Header add Link \"</foo.css>;rel=preload\"
+</Location>
+
+
+Credits: 
+Felix Wilhelm of Google Project Zero
+
+This bug is subject to a 90 day disclosure deadline. After 90 days elapse, the bug report 
+will become visible to the public. The scheduled disclosure date is 2020-07-23. 
+Disclosure at an earlier date is also possible if agreed upon by all parties. 
+
+
+
+
+Related CVE Numbers: CVE-2020-9490.
+
+
+
+Found by: fwilhelm@google.com
+
