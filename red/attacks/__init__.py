@@ -2,6 +2,7 @@ import enum
 
 
 class Attack(str, enum.Enum):
+    all = "all"
     apache_push_diary = 'apache-push-diary'
     check_default_credentials = 'check-default-credentials'
     concurrent_ids = 'concurrent-ids'
@@ -12,7 +13,10 @@ class Attack(str, enum.Enum):
     withdraw_all_from_default = 'withdraw-all-from-default'
 
     def get_script(self):
-        if self == self.apache_push_diary:
+        if self == self.all:
+            from . import all
+            return all
+        elif self == self.apache_push_diary:
             from . import apache_push_diary
             return apache_push_diary
         elif self == self.check_default_credentials:
