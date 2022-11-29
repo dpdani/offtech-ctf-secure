@@ -1,0 +1,24 @@
+set ns [new Simulator]
+source tb_compat.tcl
+
+set server [$ns node]
+tb-set-node-os $server Ubuntu-EDU
+set gateway [$ns node]
+tb-set-node-os $gateway Ubuntu-EDU
+set router [$ns node]
+tb-set-node-os $router Ubuntu-EDU
+set client1 [$ns node]
+tb-set-node-os $client1 Ubuntu-EDU
+set client2 [$ns node]
+tb-set-node-os $client2 Ubuntu-EDU
+set client3 [$ns node]
+tb-set-node-os $client3 Ubuntu-EDU
+
+set link1 [$ns duplex-link $server $gateway 100Mb 0ms DropTail]
+set link2 [$ns duplex-link $router $gateway 1000Mb 0ms DropTail]
+set link3 [$ns duplex-link $client1 $router 100Mb 0ms DropTail]
+set link4 [$ns duplex-link $client2 $router 100Mb 0ms DropTail]
+set link5 [$ns duplex-link $client3 $router 100Mb 0ms DropTail]
+
+$ns rtproto Static
+$ns run

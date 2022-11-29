@@ -22,6 +22,7 @@ logger_format = (
 logger.configure(extra={"ip": "", "user": ""})  # Default values
 logger.remove()
 logger.add(sys.stdout, format=logger_format)
+logger.add("./logs/red-{time}.log")
 
 
 def error(message):
