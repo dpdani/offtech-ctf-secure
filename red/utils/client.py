@@ -38,3 +38,9 @@ def create_user(user: User):
         user=user,
         action=Action.register,
     )
+
+def get_balance(user: User):
+    response = process(
+        user=user,
+        action=Action.balance,
+    )
