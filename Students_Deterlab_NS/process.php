@@ -7,80 +7,96 @@ $myFile = "/tmp/request.log";
 $fh = fopen($myFile, 'a');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $user = test_input($_POST["user"]);
-  $pass = test_input($_POST["pass"]);
-  $choice = test_input($_POST["drop"]);
-  $amount = test_input($_POST["amount"]);
-
-  $mysqli = new mysqli('localhost', 'root', 'rootmysql', 'ctf2');
-  if (!$mysqli) 
-  {
-    die('Could not connect: ' . $mysqli->error());
-  }
-  $url="process.php?user=$user&pass=$pass&drop=balance";
-  if ($choice == 'register')
-  {
-    $query = "insert into users (user,pass) values ('$user', '$pass')";
+  $user = clear_input($_POST["user"]);
+  $pass = clear_input($_POST["pass"]);
+  $amount = clear_input($_POST["amount"]);
+  $choice = clear_input($_POST["drop"]);
+  
+  if (is_null($user) || is_null($pass) || is_null($amount) || is_null($choice) || 
+      !is_numeric($amount) || !ctype_alnum($user)) {
+    print "Error: Please check your inputs";
+  } else {
+    $mysqli = new mysqli('localhost', 'root', 'rootmysql', 'ctf2');
+    if (!$mysqli) 
+    {
+      die('Could not connect: ' . $mysqli->error());
+    }
+    $url="process.php?user=$user&pass=$pass&drop=balance";
+    if ($choice == 'register')
+    {
+      $stmt = $mysqli->prepare("insert into users (user,pass) values (?, ?)");
+      $stmt->bind_param("ss", $user, $pass);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
+    }
+    else if ($choice == 'balance')
+    {
+      $stmt = $mysqli->prepare("select * from transfers where user=?");
+      $stmt->bind_param("s", $user);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      $sum = 0;
+      print "<H1>Balance and transfer history for $user</H1><P>";
+      print "<table border=1><tr><th>Action</th><th>Amount</th></tr>";
+      while ($row = $result->fetch_array())
+      {
+          $amount = $row['amount'];
+          if ($amount < 0)
+          {
+            $action = "Withdrawal";
+          }
+        else
+          {
+            $action = "Deposit";
+          }
+          print "<tr><td>" . $action . "</td><td>" . $amount . "</td></tr>";
+          $sum += $amount;
+        }
+        print "<tr><td>Total</td><td>" . $sum . "</td></tr></table>";
+        print "Back to <A HREF='index.php'>home</A>";		    
+    }
+    else if ($choice == 'deposit')
+    {
+      $stmt = $mysqli->prepare("insert into transfers (user,amount) values (?, ?)");
+      $stmt->bind_param("si", $user, $amount);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
+    }
+    else if ($choice == 'withdraw')
+    {
+      $stmt = $mysqli->prepare("insert into transfers (user,amount) values (?, ?)");
+      $stmt->bind_param("si", $user, -$amount);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
+    }
+    else {
+      print "Error: Unrecognized action";
+    }
+    //Log data for scoring
+    $query = "select * from transfers";
     $result = $mysqli->query($query);
-    die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
-  }
-  else if ($choice == 'balance')
-  {
-    $query = "select * from transfers where user='$user'";
-    $result = $mysqli->query($query);
-    $sum = 0;
-    print "<H1>Balance and transfer history for $user</H1><P>";
-    print "<table border=1><tr><th>Action</th><th>Amount</th></tr>";
+    fwrite($fh, "BEGIN\n");
+    fwrite($fh, "TRANSFERS\n");
     while ($row = $result->fetch_array())
     {
-        $amount = $row['amount'];
-        if ($amount < 0)
-        {
-          $action = "Withdrawal";
-        }
-      else
-        {
-          $action = "Deposit";
-        }
-        print "<tr><td>" . $action . "</td><td>" . $amount . "</td></tr>";
-        $sum += $amount;
-      }
-      print "<tr><td>Total</td><td>" . $sum . "</td></tr></table>";
-      print "Back to <A HREF='index.php'>home</A>";		    
-  }
-  else if ($choice == 'deposit')
-  {
-    $query = "insert into transfers (user,amount) values ('$user', '$amount')";
+        $timestamp = date('Y-m-d h:i:s', time());
+        fwrite($fh, $row['user'] . " " . $row['amount'] . " " . $timestamp . "\n");
+    }
+    $query = "select * from users";
     $result = $mysqli->query($query);
-    die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
+    fwrite($fh, "USERS\n");
+    while ($row = $result->fetch_array())
+    {
+        fwrite($fh, $row['user'] . " " . $row['pass'] . "\n");
+    }
+    fwrite($fh, "END\n");
   }
-  else
-  {
-    $query = "insert into transfers (user,amount) values ('$user', -'$amount')";
-    $result = $mysqli->query($query);
-    die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
-  }
-  //Log data for scoring
-  $query = "select * from transfers";
-  $result = $mysqli->query($query);
-  fwrite($fh, "BEGIN\n");
-  fwrite($fh, "TRANSFERS\n");
-  while ($row = $result->fetch_array())
-  {
-      $timestamp = date('Y-m-d h:i:s', time());
-      fwrite($fh, $row['user'] . " " . $row['amount'] . " " . $timestamp . "\n");
-  }
-  $query = "select * from users";
-  $result = $mysqli->query($query);
-  fwrite($fh, "USERS\n");
-  while ($row = $result->fetch_array())
-  {
-      fwrite($fh, $row['user'] . " " . $row['pass'] . "\n");
-  }
-  fwrite($fh, "END\n");
 }
 
-function test_input($data) {
+function clear_input($data) {
   $data = trim($data);
   $data = stripslashes($data);
   $data = htmlspecialchars($data);
