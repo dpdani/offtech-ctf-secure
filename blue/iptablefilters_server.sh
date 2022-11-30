@@ -1,12 +1,22 @@
-GATEWAY="gateway.secure-g3.offtech"
-ssh $GATEWAY<<EOF
+SERVER="server.secure-g3.offtech"
+DETERLAB=$(ssh $SERVER "ip addr | grep 192.168 | tail -c 5")
+
+echo "Deterlab interface: $DETERLAB"
+
+# Deleting already existing rules
+
+ssh $SERVER "sudo iptables -F; sudo iptables -t nat -F; sudo iptables -t mangle -F"
+
+# Inserting the new rules
+
+ssh $SERVER<<EOF
 sudo su -
 iptables -t mangle -A PREROUTING -s 10.1.1.2 -j ACCEPT
 iptables -t mangle -A INPUT -s 10.1.1.2 -j ACCEPT
 iptables -t mangle -A FORWARD -s 10.1.1.2 -j ACCEPT
 
-iptables -A INPUT -i ethx -j ACCEPT
-iptables -A OUTPUT -o ethx -j ACCEPT
+iptables -A INPUT -i $DETERLAB -j ACCEPT
+iptables -A OUTPUT -o $DETERLAB -j ACCEPT
 iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT --match limit --limit 30/minute
 iptables -A INPUT -p tcp -s 10.1.3.2 --dport ssh -j DROP
 iptables -A INPUT -p tcp -s 10.1.4.2 --dport ssh -j DROP
