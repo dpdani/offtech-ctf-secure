@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="./index.html">
+                Packet analyzer
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="./">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="./http.html">HTTP Requests</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="./ip.html">IP addresses</a>
+                    </li>
+                </ul>
+            </div>
+    </nav>
+
+    <br>
+    <div class="container-fluid">
+        <h2> HTTP requests: </h2>
+        <br>
+
+        <b>Average response delay </b>: {{ avg_delay }} s <br><br>
+        <b>Number of HTTP responses with delay > 500ms </b>: {{ slow }}
+
+        <br>
+        <br>
+        <table id="table" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Sniff time</th>
+                    <th>Source IP</th>
+                    <th>Source port</th>
+                    <th>Method</th>
+                    <th>URI</th>
+                    <th>HTTP version</th>
+                    <th>Host</th>
+                    <th>User-Agent</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#table').DataTable({
+                ajax: 'http://127.0.0.1:5000/get_http_req',
+                order: [[ 0, 'desc' ]]
+            });
+        });
+    </script>
+
+</body>
+</html>
