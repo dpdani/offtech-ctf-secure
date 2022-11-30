@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="./index.html">
+                Packet analyzer
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="./">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="./http.html">HTTP Requests</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="./ip.html">IP addresses</a>
+                    </li>
+                </ul>
+            </div>
+    </nav>
+
+    <br>
+    <div class="container-fluid">
+        <h2> IP sources stats: </h2>
+        <br>
+        <table id="table" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Source IP</th>
+                    <th>TCP</th>
+                    <th>UDP</th>
+                    <th>ICMP</th>
+                    <th>Others</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#table').DataTable({
+                ajax: 'http://127.0.0.1:5000/get_ips',
+            });
+        });
+    </script>
+
+</body>
+</html>
