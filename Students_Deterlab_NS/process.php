@@ -23,7 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $url="process.php?user=$user&pass=$pass&drop=balance";
     if ($choice == 'register')
-    {
+	{
+	  if(strlen($pass) < 8 || strlen($pass)>100) {
+		die('Error: the password must be 8 to 100 characters');
+	  }	
+	  if(strlen($user) > 100) {
+		die('Error: the username must be less that 100 characters');
+	  }
+
       $stmt = $mysqli->prepare("insert into users (user,pass) values (?, ?)");
       $stmt->bind_param("ss", $user, $pass);
       $stmt->execute();
@@ -31,7 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
     }
     else if ($choice == 'balance')
-    {
+	{
+	  // todo add authentication
       $stmt = $mysqli->prepare("select * from transfers where user=?");
       $stmt->bind_param("s", $user);
       $stmt->execute();
@@ -57,7 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         print "Back to <A HREF='index.php'>home</A>";		    
     }
     else if ($choice == 'deposit')
-    {
+	{
+	  // todo add authentication
       $stmt = $mysqli->prepare("insert into transfers (user,amount) values (?, ?)");
       $stmt->bind_param("si", $user, $amount);
       $stmt->execute();
@@ -65,7 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
     }
     else if ($choice == 'withdraw')
-    {
+	{
+	  // todo add authentication
       $stmt = $mysqli->prepare("insert into transfers (user,amount) values (?, ?)");
       $stmt->bind_param("si", $user, -$amount);
       $stmt->execute();
