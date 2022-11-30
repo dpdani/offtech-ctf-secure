@@ -1,7 +1,7 @@
 <html>
 <body>
 
-<form action="<?php echo htmlspecialchars('process.php');?>" method="post">
+<form action="<?php echo htmlspecialchars('process.php');?>" method="get">
 Username: <input type="text" name="user">
 Password: <input type="text" name="pass">
 Amount: <input type="text" name="amount">
