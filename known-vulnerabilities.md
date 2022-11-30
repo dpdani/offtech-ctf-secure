@@ -9,7 +9,7 @@ From https://httpd.apache.org/security/vulnerabilities_24.html:
 - https://www.cve.org/CVERecord?id=CVE-2020-35452
   - X
 - https://www.cve.org/CVERecord?id=CVE-2021-26690
-  - 
+  - NULL pointer dereference
 - https://www.cve.org/CVERecord?id=CVE-2021-26691
   - 
 - https://www.cve.org/CVERecord?id=CVE-2020-9490
@@ -33,7 +33,7 @@ From https://httpd.apache.org/security/vulnerabilities_24.html:
 - https://www.cve.org/CVERecord?id=CVE-2019-0196
   - 
 - https://www.cve.org/CVERecord?id=CVE-2019-0211
-  - 
+  - X (requires graceful restart of apache, which we can't control)
 - https://www.cve.org/CVERecord?id=CVE-2019-0217
   - 
 - https://www.cve.org/CVERecord?id=CVE-2019-0220

@@ -9,6 +9,11 @@ def read_conf_file(_: BaseSettings):
         return tomlkit.load(f)
 
 
+class User(BaseModel):
+    user: str
+    password: str
+
+
 class Attack(BaseModel):
     gateway_ext_ip: Optional[str] = None
     gateway_int_ip: Optional[str] = None
@@ -20,6 +25,8 @@ class Config(BaseSettings):
     server_host: str
     server_port: int
     attack: Attack = Attack()
+    our_users: List[User]
+    default_users: List[User]
 
     class Config:
         env_prefix = 'RED_'
