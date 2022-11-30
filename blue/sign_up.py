@@ -3,7 +3,6 @@ import random
 from random import shuffle
 import hashlib
 import pymysql as sql
-random.seed(69)
 def shuffle_word(word):
  word = list(word)
  shuffle(word)
