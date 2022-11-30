@@ -20,7 +20,7 @@ def login(users,passwd):
         return False
     else:
         cursor.execute("SELECT pass FROM users WHERE user='%s'" % (users))
-        pas= cursor.fetchone() 
+        pas=cursor.fetchone() 
         cursor.execute("SELECT salt FROM users WHERE user='%s'" % (users))
         salt=cursor.fetchone()
         new_pass=passwd+salt
