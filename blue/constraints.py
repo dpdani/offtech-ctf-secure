@@ -1,9 +1,9 @@
 import pymysql as sql
 db=sql.connect('localhost','root','rootmysql','ctf2')
 cursor=db.cursor()
-cursor.execute("ALTER TABLE users ADD salt CHAR(10)")
+cursor.execute("ALTER TABLE users ADD salt VARCHAR(10)")
 db.commit()
-cursor.execute("ALTER TABLE users (user CHAR(30) NOT NULL UNIQUE, pass VARCHAR(255) NOT NULL)")
+cursor.execute("ALTER TABLE users (user VARCHAR(30) NOT NULL UNIQUE, pass VARCHAR(255) NOT NULL)")
 db.commit()
 cursor.execute("ALTER TABLE users ADD PRIMARY KEY (user)")
 db.commit()
