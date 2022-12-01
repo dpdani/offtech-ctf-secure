@@ -8,7 +8,7 @@ $fh = fopen($myFile, 'a');
 
 $user = clear_input($_GET["user"]);
 $pass = clear_input($_GET["pass"]);
-$amount = clear_input($_GET["amount"]);
+$amount = (int)clear_input($_GET["amount"]);
 $choice = clear_input($_GET["drop"]);
 
 if (is_null($user) || is_null($pass) || is_null($amount) || is_null($choice) || 
