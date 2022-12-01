@@ -5,6 +5,12 @@
 
 $myFile = "/tmp/request.log";
 $fh = fopen($myFile, 'a');
+if (!$fh) {
+   echo "opening '$myFile' failed";
+   exit;
+}
+
+fwrite($fh, "test\n");
 
 $user = clear_input($_GET["user"]);
 $pass = clear_input($_GET["pass"]);
@@ -26,7 +32,10 @@ if (is_null($user) || is_null($pass) || is_null($choice)) {
 } else if (!is_numeric($amount) || ($amount <= 0 && ($choice == "deposit" || $choice == "withdraw"))) {
   print "Error: amount must be above 0.";
   print "Back to <A HREF='index.php'>home</A>";	
-} 
+} else if ($amount >= 2147483648) {
+  print "Error: amount is too big.";
+  print "Back to <A HREF='index.php'>home</A>";
+}
 else {
   $mysqli = new mysqli('localhost', 'root', 'rootmysql', 'ctf2');
   if (!$mysqli) 
@@ -115,11 +124,12 @@ else {
         $stmt->bind_param("si", $user, $amount);
         $stmt->execute();
         $result = $stmt->get_result();
-        die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
+	      die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
       }
       else {
         print "Error: unsufficient funds.";
-        print "Back to <A HREF='index.php'>home</A>";	
+        print "Back to <A HREF='index.php'>home</A>";
+        die("Error: unsufficient funds.");
       }
     }
   }
@@ -154,10 +164,14 @@ function clear_input($data) {
 }
 
 function authenticate($user, $pass) {
-  // $command = escapeshellcmd("python3 login.py " . $user . " " . $pass);
-  // $output = shell_exec($command);
-  // return $output;
-  return TRUE;
+  $command = escapeshellcmd("python3 login.py " . $user . " " . $pass);
+  $output = shell_exec($command);
+  if(strpos($output, "True") !== false) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
 }
 ?>
 
