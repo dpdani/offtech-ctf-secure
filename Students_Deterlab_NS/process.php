@@ -70,10 +70,12 @@ else {
     if(!authenticate($user, $pass)) {
       print "Error: username and/or password is incorrect.";
     } else {
-      $stmt = $mysqli->prepare("insert into transfers (user,amount) values (?, ?, now())");
-      $stmt->bind_param("si", $user, $amount);
-      $stmt->execute();
-      $result = $stmt->get_result();
+      // $stmt = $mysqli->prepare("insert into transfers (user,amount, tstamp) values (?, ?, now())");
+      // $stmt->bind_param("si", $user, $amount);
+      // $stmt->execute();
+      // $result = $stmt->get_result();
+      $command = escapeshellcmd("python3 deposit.py " . $user . " " . $amount);
+      $output = shell_exec($command);
     }
     die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
   }
@@ -82,10 +84,12 @@ else {
     if(!authenticate($user, $pass)) {
       print "Error: username and/or password is incorrect.";
     } else {
-      $stmt = $mysqli->prepare("insert into transfers (user,amount) values (?, ?, now())");
-      $stmt->bind_param("si", $user, -$amount);
-      $stmt->execute();
-      $result = $stmt->get_result();
+      // $stmt = $mysqli->prepare("insert into transfers (user,amount, tstamp) values (?, ?, now())");
+      // $stmt->bind_param("si", $user, -$amount);
+      // $stmt->execute();
+      // $result = $stmt->get_result();
+      $command = escapeshellcmd("python3 withdraw.py " . $user . " " . $amount);
+      $output = shell_exec($command);
     }
     die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
   }

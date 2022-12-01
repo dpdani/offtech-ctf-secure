@@ -2,7 +2,6 @@ from hashlib import sha256
 import random
 from random import shuffle
 import hashlib
-# import pymysql as sql
 import mysql.connector
 import sys
 
@@ -13,7 +12,6 @@ def shuffle_word(word):
 def SHA256(message):
     return sha256(message.encode()).hexdigest()
 def signup (usere, passwd):
-    # db=sql.connect('localhost','root','rootmysql','ctf2')
     db = mysql.connector.connect(user='root', password='rootmysql', host='localhost', database='ctf2')
     cursor=db.cursor()
     new_salt=random.randint(1,999999999)

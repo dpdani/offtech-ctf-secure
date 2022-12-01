@@ -1,7 +1,6 @@
 from hashlib import sha256
 from random import shuffle
 import hashlib
-# import pymysql as sql
 import mysql.connector
 import sys
 
@@ -12,7 +11,6 @@ def shuffle_word(word):
 def SHA256(message):
     return sha256(message.encode()).hexdigest()
 def login(users,passwd):
-    # db=sql.connect('localhost','root','rootmysql','ctf2')
     db = mysql.connector.connect(user='root', password='rootmysql', host='localhost', database='ctf2')
     cursor=db.cursor()
     cursor.execute("SELECT user FROM users WHERE user='%s'" % (users))
