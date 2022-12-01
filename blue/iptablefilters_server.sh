@@ -25,4 +25,7 @@ iptables -A INPUT -p tcp -s 10.1.2.2 --dport ssh -j DROP
 iptables -N port-scan
 iptables -A port-scan -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s -j RETURN
 iptables -A port-scan -j DROP
+iptables -A INPUT -p tcp -s 10.1.3.2 --dport ssh -j DROP
+iptables -A INPUT -p tcp -s 10.1.4.2 --dport ssh -j DROP
+iptables -A INPUT -p tcp -s 10.1.2.2 --dport ssh -j DROP
 EOF

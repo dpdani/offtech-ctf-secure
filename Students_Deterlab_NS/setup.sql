@@ -12,7 +12,7 @@ create table transfers (
 	id mediumint not null auto_increment, 
 	user char(20) not null, 
 	amount int not null default 0, 
-	tstamp datetime not null, 
+	tstamp datetime not null default CURRENT_TIMESTAMP, 
 	foreign key(user) references users(user), 
 	primary key (id),
 	check(amount>=0)
