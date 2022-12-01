@@ -1,6 +1,9 @@
 EPATH="."
 echo Installing the exercise
 sudo apt-get update 
+
+sudo apt-get install python3-pip python3-mysql.connector -y
+
 debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password rootmysql'
 debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password rootmysql'
 sudo apt-get install lamp-server^ -y
