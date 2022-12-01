@@ -25,3 +25,8 @@ insert into users values('kate','42scb7b112aadeac98ae1cfda55521005afd026bf8e1','
 insert into transfers (user, amount, tstamp) values ('jelena','100', now());
 insert into transfers (user, amount, tstamp) values ('john','100', now());
 insert into transfers (user, amount, tstamp) values ('kate','300', now());
+
+
+CREATE USER 'script@localhost' IDENTIFIED BY 'ude2z&YU3Mq!LR#!%h#e';
+GRANT SELECT, INSERT ON ctf2.users to 'script@localhost';
+GRANT SELECT, INSERT ON ctf2.transfers to 'script@localhost';
