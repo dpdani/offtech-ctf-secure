@@ -8,8 +8,8 @@ debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password
 debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password a@$Sxc7FZr9A*V4MWJy8'
 sudo apt-get install lamp-server^ -y
 sudo cp $EPATH/*.php /var/www/html
-sudo mkdir /root/server-scripts/
-sudo cp $EPATH/*.py /root/server-scripts/
+sudo mkdir /home/deter/server-scripts/
+sudo cp $EPATH/*.py /home/deter/server-scripts/
 sudo rm /var/www/html/index.html
 sudo cat $EPATH/httpd.conf >> /etc/apache2/httpd.conf
 sudo /etc/init.d/apache2 restart
