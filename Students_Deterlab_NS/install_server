@@ -4,8 +4,8 @@ sudo apt-get update
 
 sudo apt-get install python3-pip python3-mysql.connector -y
 
-debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password rootmysql'
-debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password rootmysql'
+debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password a@$Sxc7FZr9A*V4MWJy8'
+debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password a@$Sxc7FZr9A*V4MWJy8'
 sudo apt-get install lamp-server^ -y
 sudo cp $EPATH/*.php /var/www/html
 sudo mkdir /root/server-scripts/
@@ -13,4 +13,4 @@ sudo cp $EPATH/*.py /root/server-scripts/
 sudo rm /var/www/html/index.html
 sudo cat $EPATH/httpd.conf >> /etc/apache2/httpd.conf
 sudo /etc/init.d/apache2 restart
-sudo mysql -u"root" -p"rootmysql" < $EPATH/setup.sql
+sudo mysql -u"root" -p"a@$Sxc7FZr9A*V4MWJy8" < $EPATH/setup.sql

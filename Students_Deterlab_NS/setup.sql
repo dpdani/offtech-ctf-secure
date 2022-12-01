@@ -9,9 +9,9 @@ create table users (
 ) ENGINE=InnoDB;
 
 create table transfers (
-	id mediumint not null auto_increment, 
+	id bigint not null auto_increment, 
 	user char(20) not null, 
-	amount int not null default 0, 
+	amount bigint not null default 0, 
 	tstamp datetime not null default CURRENT_TIMESTAMP, 
 	foreign key(user) references users(user), 
 	primary key (id),
