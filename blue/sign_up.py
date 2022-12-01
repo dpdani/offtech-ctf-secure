@@ -10,7 +10,7 @@ def shuffle_word(word):
 def SHA256(message):
     return sha256(message.encode()).hexdigest()
 def signup (usere, passwd):
-    db=sql.connect('localhost','root','rootmysql','ctf2')
+    db=sql.connect('localhost','script','ude2z&YU3Mq!LR#!%h#e','ctf2')
     cursor=db.cursor()
     new_salt=random.randint(1,999999999)
     new_salt=SHA256(str(new_salt))[0:10]

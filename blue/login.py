@@ -10,7 +10,7 @@ def shuffle_word(word):
 def SHA256(message):
     return sha256(message.encode()).hexdigest()
 def login(users,passwd):
-    db=sql.connect('localhost','root','rootmysql','ctf2')
+    db=sql.connect('localhost','script','ude2z&YU3Mq!LR#!%h#e','ctf2')
     cursor=db.cursor()
     cursor.execute("SELECT user FROM users WHERE user='%s'" % (users))
     check1=cursor.fetchone()

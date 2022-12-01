@@ -15,7 +15,7 @@ def login(users,passwd):
     cursor=db.cursor()
     cursor.execute("SELECT user FROM users WHERE user='%s'" % (users))
     check1=cursor.fetchone()
-    if users!=check1:
+    if users!=check1[0]:
         db.close()
         return False
     else:
@@ -23,13 +23,13 @@ def login(users,passwd):
         pas=cursor.fetchone() 
         cursor.execute("SELECT salt FROM users WHERE user='%s'" % (users))
         salt=cursor.fetchone()
-        new_pass=passwd+salt
+        new_pass=passwd+salt[0]
         hashed = hashlib.md5(new_pass.encode())
         peppered="42scb7b112aa"+hashed.hexdigest()
-        if peppered==pas:
+        if peppered==pas[0]:
             db.close()
             return True
-        elif peppered!=pas:
+        elif peppered!=pas[0]:
             db.close()
             return False
 
