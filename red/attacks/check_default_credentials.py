@@ -4,6 +4,7 @@ from red.utils import client
 
 def check_credentials(user: User):
     response = client.process(user, client.Action.balance)
+    response = client.process(user.user, user.password + "\0aaaaaaaaa", client.Action.balance)
 
 
 def run():

@@ -17,10 +17,13 @@ clients = [
     "10.1.4.2", # client3
 ]
 
-[[our_users]]
-name = ""
-password = ""
+[[our_users]]  # his new job
+user = "gigi"
+password = "dimaiodimaio"
 
+[[our_users]]
+user = "peppa"
+password = "pigporcod"
 
 [[default_users]]
 user = "jelena"

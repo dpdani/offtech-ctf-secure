@@ -12,6 +12,7 @@ from red.utils import get_experiment_interface_and_ip
 
 cli = typer.Typer()
 
+# sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
 interface, ip = get_experiment_interface_and_ip()
 logger_format = (
     "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
@@ -21,7 +22,7 @@ logger_format = (
 )
 logger.configure(extra={"ip": "", "user": ""})  # Default values
 logger.remove()
-logger.add(sys.stdout, format=logger_format)
+logger.add(sys.stderr, format=logger_format)
 logger.add("./logs/red-{time}.log")
 
 
