@@ -43,7 +43,7 @@ else {
   $url="process.php?user=$user&pass=$pass&drop=balance";
   if ($choice == 'register')
   {
-    $command = escapeshellcmd("python3 sign_up.py " . $user . " " . $pass);
+    $command = escapeshellcmd("python3 /root/server-scripts/sign_up.py " . $user . " " . $pass);
     $output = shell_exec($command);
     die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
   }
@@ -163,7 +163,7 @@ function clear_input($data) {
 }
 
 function authenticate($user, $pass) {
-  $command = escapeshellcmd("python3 login.py " . $user . " " . $pass);
+  $command = escapeshellcmd("python3 /root/server-scripts/login.py " . $user . " " . $pass);
   $output = shell_exec($command);
   if(strpos($output, "True") !== false) {
     return TRUE;
