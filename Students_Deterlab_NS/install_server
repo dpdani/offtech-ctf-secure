@@ -13,4 +13,4 @@ sudo cp $EPATH/*.py /home/deter/server-scripts/
 sudo rm /var/www/html/index.html
 sudo cat $EPATH/httpd.conf >> /etc/apache2/httpd.conf
 sudo /etc/init.d/apache2 restart
-sudo mysql -u"root" -p"a@$Sxc7FZr9A*V4MWJy8" < $EPATH/setup.sql
+sudo mysql -u'root' -p'a@$Sxc7FZr9A*V4MWJy8' < $EPATH/setup.sql
