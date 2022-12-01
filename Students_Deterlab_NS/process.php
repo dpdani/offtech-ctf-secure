@@ -10,8 +10,6 @@ if (!$fh) {
    exit;
 }
 
-fwrite($fh, "test\n");
-
 $user = clear_input($_GET["user"]);
 $pass = clear_input($_GET["pass"]);
 $amount = (int)clear_input($_GET["amount"]);
@@ -153,6 +151,8 @@ else {
     fwrite($fh, $row['user'] . " " . $row['pass'] . "\n");
   }
   fwrite($fh, "END\n");
+
+  fclose($fh);
 }
 
 function clear_input($data) {
