@@ -35,7 +35,7 @@ if (is_null($user) || is_null($pass) || is_null($choice)) {
   print "Back to <A HREF='index.php'>home</A>";
 }
 else {
-  $mysqli = new mysqli('localhost', 'root', 'rootmysql', 'ctf2');
+  $mysqli = new mysqli('localhost', 'script', 'ude2z&YU3Mq!LR#!%h#e', 'ctf2');
   if (!$mysqli) 
   {
     die('Could not connect: ' . $mysqli->error());
