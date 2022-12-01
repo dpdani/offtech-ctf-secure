@@ -5,3 +5,4 @@ report/
 *.pyc
 deter_username.txt
 **/__pycache__/
+site-packages/
