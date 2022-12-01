@@ -52,7 +52,7 @@ else {
   else if ($choice == 'balance')
   {
     if(!authenticate($user, $pass)) {
-      print "Error: username and/or password is incorrect.";
+      die("Error: username and/or password is incorrect.\n");
       print "Back to <A HREF='index.php'>home</A>";	
     } else {
       $stmt = $mysqli->prepare("select * from transfers where user=?");
@@ -83,7 +83,7 @@ else {
   else if ($choice == 'deposit')
   {
     if(!authenticate($user, $pass)) {
-      print "Error: username and/or password is incorrect.";
+      die("Error: username and/or password is incorrect.\n");
       print "Back to <A HREF='index.php'>home</A>";	
     } else {
       $stmt = $mysqli->prepare("insert into transfers (user,amount, tstamp) values (?, ?, now())");
@@ -96,7 +96,7 @@ else {
   else if ($choice == 'withdraw')
   {
     if(!authenticate($user, $pass)) {
-      print "Error: username and/or password is incorrect.";
+      die("Error: username and/or password is incorrect.\n");
       print "Back to <A HREF='index.php'>home</A>";	
     } 
     else {
@@ -127,14 +127,13 @@ else {
 	      die('<script type="text/javascript">window.location.href="' . $url . '"; </script>');
       }
       else {
-        print "Error: unsufficient funds.";
+        die("Error: unsufficient funds.\n");
         print "Back to <A HREF='index.php'>home</A>";
-        die("Error: unsufficient funds.");
       }
     }
   }
   else {
-    print "Error: Unrecognized action";
+    die("Error: Unrecognized action.\n");
     print "Back to <A HREF='index.php'>home</A>";	
   }
   //Log data for scoring
