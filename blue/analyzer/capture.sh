@@ -2,7 +2,7 @@
 
 #set -x # echo on
 
-EXPERIMENT="secure-g3"
+EXPERIMENT="ctfsec3"
 DST_IP="10.1.2.2"
 
 ETH=$(ssh $1.${EXPERIMENT}.offtech "sudo ip route get ${DST_IP}" | head -1 | awk '{print $5}')
