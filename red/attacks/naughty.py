@@ -20,7 +20,7 @@ def run():
             action=string,
             amount=string,
         )
-        time.sleep(0.1)
+        time.sleep(1)
     for string in blns:
         for action in client.Action:
             client.process(
@@ -29,4 +29,4 @@ def run():
                 action=action,
                 amount=string,
             )
-            time.sleep(0.1)
+            time.sleep(1)

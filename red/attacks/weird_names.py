@@ -24,4 +24,4 @@ def run():
         client.create_user(u)
         if client.get_balance(u) is not None:
             client.create_user(User(user=name, password="myduplicatepassw"))
-        # time.sleep(0.3)
+        time.sleep(0.3)

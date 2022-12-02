@@ -20,7 +20,7 @@ def attempt(i):
 
 def run():
     i = 0
-    while True:
+    while i < 10:
         attempt(i)
         time.sleep(1)
         i += 1

@@ -36,3 +36,14 @@ password = "abcdef"
 [[default_users]]
 user = "kate"
 password = "abcdef"
+
+
+[[shared_users]]
+user = "sep"
+password = ""
+[[shared_users]]
+user = "usenix"
+password = ""
+[[shared_users]]
+user = "ccs"
+password = ""

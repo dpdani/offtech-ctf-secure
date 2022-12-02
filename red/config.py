@@ -27,6 +27,7 @@ class Config(BaseSettings):
     attack: Attack = Attack()
     our_users: List[User]
     default_users: List[User]
+    shared_users: List[User]
 
     class Config:
         env_prefix = 'RED_'

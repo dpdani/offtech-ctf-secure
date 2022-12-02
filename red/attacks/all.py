@@ -12,6 +12,7 @@ def run():
             Attack.gigi_is_ok,
             Attack.keep_very_alive,
             Attack.what_she_said,
+            Attack.naughty,
             Attack.put_some,
         ]:
             continue
